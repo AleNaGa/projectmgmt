@@ -30,7 +30,6 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id",  unique = true)
-    @NotNull(message = "El ID no puede ser nulo")
     private Integer projectId;
 
     @Column(name = "project_name", unique = true, length = 45)

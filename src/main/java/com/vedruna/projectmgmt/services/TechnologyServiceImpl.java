@@ -5,11 +5,15 @@ import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.vedruna.projectmgmt.dto.CreateTechnologyDTO;
 import com.vedruna.projectmgmt.persistance.model.Technology;
 import com.vedruna.projectmgmt.persistance.repository.TechnologyRepositoryI;
 
+
+
+@Service
 public class TechnologyServiceImpl implements TechnologyServiceI {
 
     @Autowired

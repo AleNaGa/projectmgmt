@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+
 
 import com.vedruna.projectmgmt.dto.CreateProjectDTO;
 import com.vedruna.projectmgmt.dto.ProjectDTO;
@@ -21,6 +22,8 @@ import com.vedruna.projectmgmt.persistance.repository.ProjectRepositoryI;
 import com.vedruna.projectmgmt.persistance.repository.StatusRepositoryI;
 import com.vedruna.projectmgmt.persistance.repository.TechnologyRepositoryI;
 
+
+@Service
 public class ProjectServiceImpl implements ProjectServiceI {
 
     @Autowired 
@@ -33,6 +36,11 @@ public class ProjectServiceImpl implements ProjectServiceI {
     StatusRepositoryI statusRepo;
     @Autowired
     private static final Logger log = LoggerFactory.getLogger(ProjectServiceImpl.class);
+
+    @Override
+    public String test(){
+        return "holaMundo";
+    }
 
     @Override
     public List<ProjectDTO> getAll(int page, int size) {
@@ -50,10 +58,11 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
     @Override
-    public List<ProjectDTO> getProject(String word) {
-        List<Project> project = projectRepo.findByProjectName(word);
+    public List<ProjectDTO> getProject(String word, int page, int size) {
+        Pageable pages = PageRequest.of(page, size);
+        Page<Project> project = new PageImpl<>(projectRepo.findByProjectName(word));
         try{
-            log.info("Se han obtenido {} proyectos", project.size());
+            log.info("Se han obtenido {} proyectos", project.getSize());
             return project.stream().map(ProjectDTO::new).collect(Collectors.toList());
         }catch(Exception e){
             log.error(e.getMessage());
@@ -109,10 +118,12 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
     @Override
-    public List<ProjectDTO> getByTechno(String tech) {
-        List<Project> project = projectRepo.findProjectsByTechnologyName(tech);
+    public List<ProjectDTO> getByTechno(String tech, int page, int size) {
+        Pageable pages = PageRequest.of(page, size);
+
+        Page<Project> project = new PageImpl<>(projectRepo.findProjectsByTechnologyName(tech));
         try{
-            log.info("Se han obtenido {} proyectos", project.size());
+            log.info("Se han obtenido {} proyectos", project.getSize());
             return project.stream().map(ProjectDTO::new).collect(Collectors.toList());
         }catch(Exception e){
             log.error(e.getMessage());
