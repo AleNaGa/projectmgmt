@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,10 +18,12 @@ public class Status {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="status_id", nullable = false, unique=true)
+    @Column(name="status_id", unique=true)
+    @NotNull(message="El statusId no puede ser nulo")
     private Integer statusId;
 
-    @Column(name = "status_name", nullable = false, unique = true, length = 255)
+    @Column(name = "status_name",  unique = true, length = 255)
+    @NotNull(message="El nombre nopuede ser nulo")
     private String statusName;
     
 }

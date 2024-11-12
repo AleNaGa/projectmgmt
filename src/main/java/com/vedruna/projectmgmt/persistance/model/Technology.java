@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,10 +21,12 @@ public class Technology {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "tech_id", nullable = false, unique = true)
+    @Column(name = "tech_id", unique = true)
+    @NotNull(message="El ID no puede ser nulo")
     private Integer techId;
 
-    @Column(name="tech_name", nullable = false, unique = true, length=45)
+    @Column(name="tech_name", unique = true, length=45)
+    @NotNull(message="El nombre de la tecnología no puede ser nulo")
     private String techName;
 
     @ManyToMany(mappedBy = "technologies") //Map en porj

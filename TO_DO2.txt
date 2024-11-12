@@ -1,0 +1,24 @@
+1) GET /projects -> Obtener todos los proyectos paginados. En
+la respuesta, debe mostrarse en cada proyecto su estado,
+las tecnologías con las que se realizó y los desarrolladores
+que trabajaron en ella.
+
+
+2) GET /projects/{word} -> Obtener el proyecto que contenga la
+palabra word en su nombre. La estructura de la respuesta
+debe ser la misma que la de la respuesta del punto anterior,
+solo que apareciendo los resultados correspondientes.
+
+3) POST /projects -> Insertar proyecto.
+
+4) PUT /projects/{id} -> Editar el proyecto.
+
+5) Delete /projects/{id} -> Eliminar el proyecto.
+
+6) POST /developers -> Insertar un programador.
+
+7) DELETE /developers -> Borrar un programador.
+
+8) POST /technologies -> Insertar tecnología.
+
+9) DELETE /technologies -> Borrar tecnología.
