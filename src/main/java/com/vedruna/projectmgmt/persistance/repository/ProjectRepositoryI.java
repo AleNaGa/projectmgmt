@@ -12,5 +12,8 @@ public interface ProjectRepositoryI extends JpaRepository<Project, Integer>{
     // Custom query
     @Query("SELECT p FROM Project p JOIN p.technologies t WHERE t.techName = :tech")
     List<Project> findProjectsByTechnologyName(String tech);
+
+    //Un Find para encontrarlo por nombre de proyecto
+    List<Project> findByProjectName(String projectName);
     
 }
