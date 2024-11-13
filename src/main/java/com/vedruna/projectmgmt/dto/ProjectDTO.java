@@ -1,5 +1,6 @@
 package com.vedruna.projectmgmt.dto;
 
+
 import java.util.List;
 
 import com.vedruna.projectmgmt.persistance.model.Developer;
@@ -12,10 +13,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ProjectDTO {
+    private Integer projectId;
     private String name;
     private String description;
-    //private String startDate;   no se si se necesita
-    //private String endDate;
+    private String startDate; 
+    private String endDate;
     private String repoUrl;
     private String demoUrl;
     private String pictureUrl;
@@ -24,8 +26,11 @@ public class ProjectDTO {
     private List<String> technologiesNames;
 
     public ProjectDTO(Project project) {
+        this.projectId = project.getProjectId();
         this.name = project.getProjectName();
         this.description = project.getDescription();
+        this.startDate = project.getStartDate().toString();
+        this.endDate = project.getEndDate().toString();
         this.repoUrl = project.getRepoUrl();
         this.demoUrl = project.getDemoUrl();
         this.pictureUrl = project.getPictureUrl();

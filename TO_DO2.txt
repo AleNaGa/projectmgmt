@@ -22,3 +22,31 @@ solo que apareciendo los resultados correspondientes.
 8) POST /technologies -> Insertar tecnología.
 
 9) DELETE /technologies -> Borrar tecnología.
+
+
+
+SERVICIO: 
+    -Projects: 
+        Conseguidos: 
+                        Paginar respuestas, 
+                        Verificaciones de duplicación, 
+                        fechado con formato correcto, 
+                        manejo de excepciones
+                        Lógica de eliminación
+                        Creación de proyectos con DTO
+                        Actualización de proyectos
+        NO conseguidos: 
+                        Validación de datos de entrada (Validado en el controlador)
+                        Respuesta coherente con HTTP status codes
+
+CONTROLADORES: 
+    -Projects:
+        Conseguidos: 
+                        Manejo de respuestas HTTP apropiado
+                        Manejo de excepciones
+                        Uso de DTOs para entrada y salida
+                        Logs de actividad
+        No Conseguidos: 
+                        Manejo de excepciones específicas y personalizadas
+                        Retorno de resultados específicos en lugar de String(DTO DE CONFIRMACION)
+                        Validación de datos de entrada: NOT NULL EN DTO 

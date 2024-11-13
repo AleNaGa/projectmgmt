@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateStatusDTO {
-    //Solo necesitamos el nombre para crearlo
+    private Integer statusId;
     private String statusName;
 
     public CreateStatusDTO(Status status) {
+        this.statusId = status.getStatusId();
         this.statusName = status.getStatusName();
     }
     

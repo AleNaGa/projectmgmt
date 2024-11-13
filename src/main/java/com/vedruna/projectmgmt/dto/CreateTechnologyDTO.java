@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateTechnologyDTO {
 
+    private Integer techId;
     private String techName;
 
     public CreateTechnologyDTO(Technology tech) {
+        this.techId = tech.getTechId();
         this.techName = tech.getTechName();
     }
     

@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import jakarta.validation.Constraint;
-import jakarta.validation.Payload;
 
 @Target({ ElementType.FIELD })//Objetivo: variables (la url es una variable String) no aplicable a métodos o clases, solo a variables
 @Retention(RetentionPolicy.RUNTIME) // para que funcione mientras corre. Así puede validar la URL que le metamos

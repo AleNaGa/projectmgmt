@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateDeveloperDTO {
-
+    private Integer devId;
     private String name;
     private String surname;
     private String email;
@@ -19,6 +19,7 @@ public class CreateDeveloperDTO {
    
 
     public CreateDeveloperDTO(Developer developer) {
+        this.devId = developer.getDevId();
         this.name = developer.getDevName();
         this.surname = developer.getDevSurname();
         this.email = developer.getEmail();
