@@ -62,6 +62,21 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/byword/{word}")
+    public ResponseEntity<List<ProjectDTO>> findByWord(@PathVariable String word, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        try {
+            List<ProjectDTO> projects = projectServ.getProjectByWord(word, page, size);
+            if (projects.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+            }
+            return ResponseEntity.ok(projects); // 200 OK con los proyectos
+        } catch (Exception e) {
+            log.error("Error al obtener proyectos: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 500 con lista vacía
+        }
+    }
+
+
     @PostMapping("/insert")
     public ResponseEntity<String> insert(@Valid @RequestBody CreateProjectDTO project, BindingResult bindingResult) {
             // Verifica si hay errores de validación

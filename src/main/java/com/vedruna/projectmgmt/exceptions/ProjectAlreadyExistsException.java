@@ -1,6 +1,6 @@
 package com.vedruna.projectmgmt.exceptions;
 
-public class ProjectAlreadyExistsException extends Exception {
+public class ProjectAlreadyExistsException extends RuntimeException {
 
     public ProjectAlreadyExistsException(String message) {
         super(message);

@@ -20,7 +20,9 @@ import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.exceptions.IllegalDateFormatException;
 import com.vedruna.projectmgmt.exceptions.ProjectAlreadyExistsException;
 import com.vedruna.projectmgmt.exceptions.ProjectNotFoundException;
+import com.vedruna.projectmgmt.persistance.model.Developer;
 import com.vedruna.projectmgmt.persistance.model.Project;
+import com.vedruna.projectmgmt.persistance.model.Technology;
 import com.vedruna.projectmgmt.persistance.repository.DeveloperRepositoryI;
 import com.vedruna.projectmgmt.persistance.repository.ProjectRepositoryI;
 import com.vedruna.projectmgmt.persistance.repository.StatusRepositoryI;
@@ -46,6 +48,13 @@ public class ProjectServiceImpl implements ProjectServiceI {
         return "holaMundo";
     }
 
+    /**
+     * Obtener todos los proyectos paginados.
+     *
+     * @param page  La página que se quiere obtener.
+     * @param size  El número de elementos por página.
+     * @return Una lista de proyectos en formato DTO.
+     */
     @Override
     public List<ProjectDTO> getAll(int page, int size) {
         Pageable pages = PageRequest.of(page, size);
@@ -57,6 +66,16 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
 
+    /**
+     * Obtener los proyectos que contengan la palabra pasada como parámetro en
+     * su nombre.
+     *
+     * @param word La palabra a buscar en el nombre de los proyectos.
+     * @param page La página que se quiere obtener.
+     * @param size El número de elementos por página.
+     * @return Una lista de proyectos en formato DTO que contienen la palabra
+     *         pasada como parámetro en su nombre.
+     */
     @Override
     public List<ProjectDTO> getProjectByWord(String word, int page, int size) {
         Pageable pages = PageRequest.of(page, size);
@@ -67,8 +86,19 @@ public class ProjectServiceImpl implements ProjectServiceI {
         return projectPage.getContent().stream().map(ProjectDTO::new).collect(Collectors.toList());
     }
 
+    /**
+     * Insertar proyecto.
+     *
+     * Verifica que no exista un proyecto con el mismo ID o nombre. Si no
+     * existe, lo inserta en la base de datos.
+     *
+     * @param project El proyecto a insertar.
+     * @return Un mensaje de confirmación de que se ha insertado el proyecto.
+     * @throws ProjectAlreadyExistsException Si ya existe un proyecto con el
+     *                                       mismo ID o nombre.
+     */
     @Override
-    public ResponseEntity<String> saveProject(CreateProjectDTO project) throws ProjectAlreadyExistsException, IllegalDateFormatException {
+    public ResponseEntity<String> saveProject(CreateProjectDTO project) {
         // Verificar si ya existe un proyecto con el mismo ID
         if (projectRepo.existsById(project.getProjectId())) {
             throw new ProjectAlreadyExistsException("Ya existe el proyecto con id: " + project.getProjectId());
@@ -102,32 +132,68 @@ public class ProjectServiceImpl implements ProjectServiceI {
       
     }
 
+    /**
+     * Actualiza un proyecto existente.
+     *
+     * Verifica que exista un proyecto con el ID pasado como parámetro y
+     * actualiza los campos que sean diferentes de null o vacío. Si no
+     * existe, lanza una excepción.
+     *
+     * @param project El proyecto con los valores a actualizar.
+     * @param id      El ID del proyecto a actualizar.
+     * @return Un mensaje de confirmación de que se ha actualizado el
+     *         proyecto.
+     */
     @Override
-    public ResponseEntity<String> updateProject(CreateProjectDTO project, Integer id) throws ProjectNotFoundException, IllegalDateFormatException {
+    public ResponseEntity<String> updateProject(CreateProjectDTO project, Integer id) {
         Project existingProject = projectRepo.findById(id).orElseThrow(() -> new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + id));
-
-        existingProject.setProjectId(project.getProjectId());
-        existingProject.setProjectName(project.getName());
-        existingProject.setDescription(project.getDescription());
-        existingProject.setStartDate(convertStringToDate(project.getStartDate()));
-        existingProject.setEndDate(convertStringToDate(project.getEndDate()));
-        existingProject.setRepoUrl(project.getRepoUrl());
-        existingProject.setDemoUrl(project.getDemoUrl());
-        existingProject.setPictureUrl(project.getPictureUrl());
-        existingProject.setTechnologies(techRepo.findAllById(project.getTechnologiesIds()));
-        existingProject.setDevelopers(devRepo.findAllById(project.getDevelopersIds()));
-
+        //Comprobación de los valores a insertar
+        if(!project.getName().equals(existingProject.getProjectName()) && project.getName() == null) {
+            existingProject.setProjectName(project.getName());
+        }
+        if(!project.getDescription().equals(existingProject.getDescription()) && project.getDescription() != null) {
+            existingProject.setDescription(project.getDescription());
+        }
+        if(!convertStringToDate(project.getStartDate()).equals(existingProject.getStartDate()) && project.getStartDate() != null) {
+            existingProject.setStartDate(convertStringToDate(project.getStartDate()));
+        }
+        if(!convertStringToDate(project.getEndDate()).equals(existingProject.getEndDate()) && project.getEndDate() != null) {
+            existingProject.setEndDate(convertStringToDate(project.getEndDate()));
+        }
+        if(!project.getRepoUrl().equals(existingProject.getRepoUrl()) && project.getRepoUrl() != null) {
+            existingProject.setRepoUrl(project.getRepoUrl());
+        }
+        if(!project.getDemoUrl().equals(existingProject.getDemoUrl()) && project.getDemoUrl() != null) {
+            existingProject.setDemoUrl(project.getDemoUrl());
+        }
+        if(!project.getPictureUrl().equals(existingProject.getPictureUrl()) && project.getPictureUrl() != null) {
+            existingProject.setPictureUrl(project.getPictureUrl());
+        }
+        //comprobación de las tecnologías y los Devs a insertar
+        if(!project.getTechnologiesIds().equals(existingProject.getTechnologies().stream().map(Technology::getTechId).toList()) && project.getTechnologiesIds() != null) {
+            existingProject.setTechnologies(techRepo.findAllById(project.getTechnologiesIds()));
+        }
+        if(!project.getDevelopersIds().equals(existingProject.getDevelopers().stream().map(Developer::getDevId).toList()) && project.getDevelopersIds() != null) {
+            existingProject.setDevelopers(devRepo.findAllById(project.getDevelopersIds()));
+        }
         try {
             projectRepo.save(existingProject);
         } catch (Exception e) {
             log.error("Error al guardar el proyecto", e);
         }
         return ResponseEntity.ok("Se ha actualizado el proyecto con id: " + id);
-      
     }
 
+    /**
+     * Elimina un proyecto existente.
+     *
+     * Verifica que el proyecto exista, y si es así, lo elimina de la base de datos.
+     *
+     * @param id El ID del proyecto a eliminar.
+     * @return Un mensaje de confirmación de que se ha eliminado el proyecto.
+     */
     @Override
-    public ResponseEntity<String> deleteProject(Integer id) throws ProjectNotFoundException {
+    public ResponseEntity<String> deleteProject(Integer id){
         if (!projectRepo.existsById(id)) {
             throw new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + id);
         }
@@ -136,6 +202,17 @@ public class ProjectServiceImpl implements ProjectServiceI {
       
     }
 
+    /**
+     * Obtener proyectos que contengan una tecnología.
+     *
+     * Utiliza un custom query para obtener proyectos que contengan la tecnología
+     * especificada.
+     *
+     * @param tech El nombre de la tecnología que se busca.
+     * @param page La página que se quiere obtener.
+     * @param size El número de elementos por página.
+     * @return Una lista de proyectos en formato DTO.
+     */
     @Override
     public List<ProjectDTO> getByTechno(String tech, int page, int size) {
         Pageable pages = PageRequest.of(page, size);
@@ -151,7 +228,15 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
 
-    private Date convertStringToDate(String date) throws IllegalDateFormatException {
+    /**
+     * Convierte una cadena en formato AAAA-MM-DD a un objeto Date. Verifica
+     * que la cadena tenga el formato correcto, y lanza una excepción
+     * IllegalDateFormatException si no es así.
+     *
+     * @param date La cadena a convertir.
+     * @return Un objeto Date con la fecha correspondiente.
+     */
+    private Date convertStringToDate(String date) {
         if(date == null){
             throw new IllegalDateFormatException("La fecha no puede ser nula");
         }else if(date.isEmpty()){

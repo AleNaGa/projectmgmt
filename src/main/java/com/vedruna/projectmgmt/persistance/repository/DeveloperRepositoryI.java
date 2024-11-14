@@ -7,5 +7,7 @@ import com.vedruna.projectmgmt.persistance.model.Developer;
 
 @Repository
 public interface DeveloperRepositoryI extends JpaRepository<Developer,Integer>{
+
+    public boolean existsByEmail(String email);
     
 }

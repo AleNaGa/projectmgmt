@@ -37,7 +37,7 @@ public class Developer {
     @Column(name="dev_surname", length = 45)
     private String devSurname;
 
-    @Column(name="email", length = 200)
+    @Column(name="email", length = 200, unique = true)
     @Email(message = "Este valor debe ser un email válido")
     private String email;
 
@@ -52,8 +52,5 @@ public class Developer {
     private String githubUrl;
 
     @ManyToMany(mappedBy = "developers") //mapeado en Project
-    private List<Project> projects;
-
-
-  
+    private List<Project> projects; 
 }
