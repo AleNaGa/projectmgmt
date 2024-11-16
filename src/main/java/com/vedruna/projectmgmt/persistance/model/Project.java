@@ -1,7 +1,7 @@
 package com.vedruna.projectmgmt.persistance.model;
 
 import java.sql.Date;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -80,5 +80,5 @@ public class Project {
         joinColumns = @JoinColumn(name = "projects_project_id"), // Columna de projects
         inverseJoinColumns = @JoinColumn(name = "developers_dev_id") // Columna de technology
     )
-    private List<Developer> developers;
+    private List<Developer> developers = new ArrayList<>();
 }

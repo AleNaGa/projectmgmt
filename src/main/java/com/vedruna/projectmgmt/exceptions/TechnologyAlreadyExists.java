@@ -6,6 +6,10 @@ public class TechnologyAlreadyExists extends RuntimeException {
         super("Ya existe la tecnologia con id: " + id);
     }
     
+    public TechnologyAlreadyExists(String message) {
+        super(message);
+    }
+    
     public TechnologyAlreadyExists(String message, Throwable cause) {
         super(message, cause);
     }

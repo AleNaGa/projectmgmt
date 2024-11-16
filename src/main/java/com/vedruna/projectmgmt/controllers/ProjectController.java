@@ -81,7 +81,6 @@ public class ProjectController {
     public ResponseEntity<String> insert(@Valid @RequestBody CreateProjectDTO project, BindingResult bindingResult) {
             // Verifica si hay errores de validación
         if (bindingResult.hasErrors()) {
-            // Puedes extraer los mensajes de error y devolverlos en la respuesta
             String errorMessages = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", "));
             return ResponseEntity.badRequest().body("Errores de validación: " + errorMessages);
         }
@@ -107,9 +106,7 @@ public class ProjectController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> update(@PathVariable Integer id, @Valid @RequestBody CreateProjectDTO project, BindingResult bindingResult) {
-        // Verifica si hay errores de validación
         if (bindingResult.hasErrors()) {
-            // Puedes extraer los mensajes de error y devolverlos en la respuesta
             String errorMessages = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", "));
             return ResponseEntity.badRequest().body("Errores de validación: " + errorMessages);
         }

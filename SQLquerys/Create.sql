@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS `portfolio`.`projects` (
   CONSTRAINT `fk_projects_status`
     FOREIGN KEY (`status_status_id`)
     REFERENCES `portfolio`.`status` (`status_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE cascade
+    ON UPDATE Cascade)
 ENGINE = InnoDB;
 
 
@@ -53,7 +53,7 @@ ENGINE = InnoDB;
 -- Table `portfolio`.`technologies`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `portfolio`.`technologies` (
-  `tech_id` INT NOT NULL,
+  `tech_id` INT NOT NULL AUTO_INCREMENT,
   `tech_name` VARCHAR(45) NULL,
   PRIMARY KEY (`tech_id`),
   UNIQUE INDEX `tech_name_UNIQUE` (`tech_name` ASC) VISIBLE)
@@ -89,13 +89,13 @@ CREATE TABLE IF NOT EXISTS `portfolio`.`developers_worked_on_projects` (
   CONSTRAINT `fk_developers_has_projects_developers1`
     FOREIGN KEY (`developers_dev_id`)
     REFERENCES `portfolio`.`developers` (`dev_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE cascade
+    ON UPDATE cascade,
   CONSTRAINT `fk_developers_has_projects_projects1`
     FOREIGN KEY (`projects_project_id`)
     REFERENCES `portfolio`.`projects` (`project_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE Cascade
+    ON UPDATE Cascade)
 ENGINE = InnoDB;
 
 
@@ -111,13 +111,13 @@ CREATE TABLE IF NOT EXISTS `portfolio`.`technologies_used_in_projects` (
   CONSTRAINT `fk_technologies_has_projects_technologies1`
     FOREIGN KEY (`technologies_tech_id`)
     REFERENCES `portfolio`.`technologies` (`tech_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE cascade
+    ON UPDATE cascade,
   CONSTRAINT `fk_technologies_has_projects_projects1`
     FOREIGN KEY (`projects_project_id`)
     REFERENCES `portfolio`.`projects` (`project_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE Cascade
+    ON UPDATE Cascade)
 ENGINE = InnoDB;
 
 

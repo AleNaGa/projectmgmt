@@ -1,5 +1,7 @@
 package com.vedruna.projectmgmt.dto;
 
+import java.util.List;
+
 import com.vedruna.projectmgmt.persistance.model.Technology;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -11,15 +13,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateTechnologyDTO {
 
-    @NotNull(message = "El ID no puede ser nulo")
+
     private Integer techId;
     @NotNull(message = "El nombre de la tecnología no puede ser nulo")
     @NotEmpty(message = "El nombre de la tecnología no puede estar vacio")
     private String techName;
+    private List<Integer> projectsIds;
 
     public CreateTechnologyDTO(Technology tech) {
         this.techId = tech.getTechId();
         this.techName = tech.getTechName();
+        tech.getProjects().forEach(project -> this.projectsIds.add(project.getProjectId()));
     }
     
 }

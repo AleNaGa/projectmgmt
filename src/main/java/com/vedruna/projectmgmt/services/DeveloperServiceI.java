@@ -1,11 +1,13 @@
 package com.vedruna.projectmgmt.services;
 
+import org.springframework.http.ResponseEntity;
+
 import com.vedruna.projectmgmt.dto.CreateDeveloperDTO;
 
 public interface DeveloperServiceI {
 
-    public void saveDeveloper(CreateDeveloperDTO developer);
-    public void deleteDeveloper(Integer id);
+    public ResponseEntity<String> saveDeveloper(CreateDeveloperDTO developer);
+    public ResponseEntity<String> deleteDeveloper(Integer id);
 
     
     

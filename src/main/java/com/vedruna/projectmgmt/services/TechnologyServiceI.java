@@ -1,10 +1,12 @@
 package com.vedruna.projectmgmt.services;
 
+import org.springframework.http.ResponseEntity;
+
 import com.vedruna.projectmgmt.dto.CreateTechnologyDTO;
 
 public interface TechnologyServiceI {
     
-    public void saveTechnology(CreateTechnologyDTO tehnology);
-    public void deleteTechnology(Integer id);
+    public ResponseEntity<String> saveTechnology(CreateTechnologyDTO tehnology);
+    public ResponseEntity<String> deleteTechnology(Integer id);
 
 }

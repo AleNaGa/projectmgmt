@@ -1,5 +1,6 @@
 package com.vedruna.projectmgmt.persistance.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vedruna.projectmgmt.validation.ValidUrl;
@@ -52,5 +53,5 @@ public class Developer {
     private String githubUrl;
 
     @ManyToMany(mappedBy = "developers") //mapeado en Project
-    private List<Project> projects; 
+    private List<Project> projects = new ArrayList<>(); 
 }
