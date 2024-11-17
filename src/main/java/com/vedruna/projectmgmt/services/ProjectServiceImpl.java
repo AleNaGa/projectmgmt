@@ -148,32 +148,32 @@ public class ProjectServiceImpl implements ProjectServiceI {
     public ResponseEntity<String> updateProject(CreateProjectDTO project, Integer id) {
         Project existingProject = projectRepo.findById(id).orElseThrow(() -> new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + id));
         //Comprobación de los valores a insertar
-        if(!project.getName().equals(existingProject.getProjectName()) && project.getName() == null) {
+        if(!project.getName().equals(existingProject.getProjectName())) {
             existingProject.setProjectName(project.getName());
         }
-        if(!project.getDescription().equals(existingProject.getDescription()) && project.getDescription() != null) {
+        if(!project.getDescription().equals(existingProject.getDescription())) {
             existingProject.setDescription(project.getDescription());
         }
-        if(!convertStringToDate(project.getStartDate()).equals(existingProject.getStartDate()) && project.getStartDate() != null) {
+        if(!convertStringToDate(project.getStartDate()).equals(existingProject.getStartDate())) {
             existingProject.setStartDate(convertStringToDate(project.getStartDate()));
         }
-        if(!convertStringToDate(project.getEndDate()).equals(existingProject.getEndDate()) && project.getEndDate() != null) {
+        if(!convertStringToDate(project.getEndDate()).equals(existingProject.getEndDate())) {
             existingProject.setEndDate(convertStringToDate(project.getEndDate()));
         }
-        if(!project.getRepoUrl().equals(existingProject.getRepoUrl()) && project.getRepoUrl() != null) {
+        if(!project.getRepoUrl().equals(existingProject.getRepoUrl())) {
             existingProject.setRepoUrl(project.getRepoUrl());
         }
-        if(!project.getDemoUrl().equals(existingProject.getDemoUrl()) && project.getDemoUrl() != null) {
+        if(!project.getDemoUrl().equals(existingProject.getDemoUrl()) ) {
             existingProject.setDemoUrl(project.getDemoUrl());
         }
-        if(!project.getPictureUrl().equals(existingProject.getPictureUrl()) && project.getPictureUrl() != null) {
+        if(!project.getPictureUrl().equals(existingProject.getPictureUrl()) ) {
             existingProject.setPictureUrl(project.getPictureUrl());
         }
         //comprobación de las tecnologías y los Devs a insertar
-        if(!project.getTechnologiesIds().equals(existingProject.getTechnologies().stream().map(Technology::getTechId).toList()) && project.getTechnologiesIds() != null) {
+        if(!project.getTechnologiesIds().equals(existingProject.getTechnologies().stream().map(Technology::getTechId).toList())) {
             existingProject.setTechnologies(techRepo.findAllById(project.getTechnologiesIds()));
         }
-        if(!project.getDevelopersIds().equals(existingProject.getDevelopers().stream().map(Developer::getDevId).toList()) && project.getDevelopersIds() != null) {
+        if(!project.getDevelopersIds().equals(existingProject.getDevelopers().stream().map(Developer::getDevId).toList()) ) {
             existingProject.setDevelopers(devRepo.findAllById(project.getDevelopersIds()));
         }
         try {

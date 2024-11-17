@@ -1,22 +1,22 @@
 check -MODELO VISTA CONTROLADOR
 check -Entidades
-check?-DEFINIR UNICAMENTE MÉTODOS QUE SE VAYAN A USAR EN REPOSITORIOS
--DEFINIR LÓGICA SERVICIOS
--PREVENCIÓN DE CRASHEO
--RESPONSEENTITY
+check-DEFINIR UNICAMENTE MÉTODOS QUE SE VAYAN A USAR EN REPOSITORIOS
+check -DEFINIR LÓGICA SERVICIOS
+check??-PREVENCIÓN DE CRASHEO
+check-RESPONSEENTITY
 -ENDPOINTS: 
     Check-GET /projects
-    -Get /projects/{word}
+    check-Get /projects/{word}
    Check -POST /projects
     -PUT /projects/{id}
-    -Delete /projects/{id}
-    -POST /developers
-    -DELETE /developers
-    -POST /technologies
-    -DELETE /technologies
+    check-Delete /projects/{id}
+    check-POST /developers
+    check-DELETE /developers
+    check-POST /technologies
+    check-DELETE /technologies
 
 ----------------REST------------------
--BUENAS PRÁCTICAS, COMENTARIOS, ERRORES, REFACTOR
+check-BUENAS PRÁCTICAS, COMENTARIOS, ERRORES, REFACTOR
 -README COMPLETO Y GUÍA
 -ENDPOINT (Primer status development)
     -PATH /api/v1/projects/totesting (a status testing)
@@ -26,6 +26,6 @@ check?-DEFINIR UNICAMENTE MÉTODOS QUE SE VAYAN A USAR EN REPOSITORIOS
     -POST /api/v1/technologies/used -> tecnología a proyecto
     -POST /api/v1/developers/worked -> trabajador a proyecto
 -SWAGGER con SPRINGDOC decribir api y detallas ENDPOINTS
--RESTCONTROLLERADVICE que capture Excepciones
--Anotaciones de validaciones a los atributos así como CUSTO VALIDATION a url
+check -RESTCONTROLLERADVICE que capture Excepciones
+check -Anotaciones de validaciones a los atributos así como CUSTO VALIDATION a url
 -GET /api/v1/projects/tec/{tech}

@@ -47,31 +47,32 @@ public class DeveloperServiceImpl implements DeveloperServiceI {
      */
     @Override
     public ResponseEntity<String> saveDeveloper(CreateDeveloperDTO developer) {
-       Developer dev = new Developer();
        if(developerRepo.existsByEmail(developer.getEmail())){
            throw new DeveloperAlreadyExists(developer.getName());
        }
+            Developer dev = new Developer();
             dev.setDevName(developer.getName());
             dev.setDevSurname(developer.getSurname());
             dev.setEmail(developer.getEmail());
             dev.setLinkedinUrl(developer.getLinkedinUrl());
             dev.setGithubUrl(developer.getGithubUrl());
-            List<Project> projects = devProjects(developer.getProjectsIds());
-            if (projects == null) {
+            if (developer.getProjectsIds() == null) {
                 dev.setProjects(Collections.emptyList());
             }else{
+                List<Project> projects = devProjects(developer.getProjectsIds());
                 dev.setProjects(projects);
-                for (Project project : projects) {
-                    project.getDevelopers().add(dev); // Asignar el developer al proyecto por la relación Many to Many
-                }
             }
             try {
                 developerRepo.save(dev);
-                log.info("Se ha guardado el desarrollador con id: " + dev.getDevId());
-                return ResponseEntity.ok("Se ha guardado el desarrollador con id: " + dev.getDevId());
+                log.info("Se ha guardado el desarrollador " + dev.getDevName());
+                for (Project project : dev.getProjects()) {
+                    project.getDevelopers().add(dev); // Asignar el developer al proyecto por la relación Many to Many
+                    projectRepo.save(project);
+                }
+                return ResponseEntity.ok("Se ha guardado el desarrollador " + dev.getDevName());
             } catch (Exception e) {
-                log.error("Error al guardar el desarrollador con id: " + dev.getDevId(), e);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el desarrollador con id: " + dev.getDevId());
+                log.error("Error al guardar el desarrollador " + dev.getDevName(), e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el desarrollador " + dev.getDevName());
             }
            
     }

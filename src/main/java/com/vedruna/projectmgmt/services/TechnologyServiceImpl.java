@@ -60,6 +60,7 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
             technologyRepo.save(tech);
             for (Project project : tech.getProjects()) {
                 project.getTechnologies().add(tech); // Asignar el developer al proyecto por la relación Many to Many
+                projectRepo.save(project);
             }
             return ResponseEntity.ok("Se ha guardado la tecnología con id: " + tech.getTechId());
         }catch(Exception e){

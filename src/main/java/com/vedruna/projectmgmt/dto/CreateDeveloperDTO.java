@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateDeveloperDTO {
-    @NotNull(message="El ID no puede ser nulo")
     private Integer devId;
     @NotNull(message="El nombre no puede ser nulo")
     private String name;

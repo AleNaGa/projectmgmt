@@ -27,7 +27,6 @@ public class Developer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dev_id",  unique = true)//Validación de único
-    @NotNull(message = "El ID no puede ser nulo")//Validaciones de null
     @Positive(message = "El ID debe ser un número positivo")
     private Integer devId;
 
