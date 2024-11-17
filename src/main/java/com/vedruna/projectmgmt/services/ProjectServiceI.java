@@ -23,4 +23,10 @@ public interface ProjectServiceI {
     //El custom path
     public List<ProjectDTO> getByTechno(String tech, int page, int size);
 
+    //Nuevos Path
+    public ResponseEntity<String> addDeveloperToProject( Integer developerId, Integer projectId);
+    public ResponseEntity<String> addTechnologyToProject( Integer technologyId, Integer projectId);
+    public ResponseEntity<String> projectToTest(Integer projectId); 
+    public ResponseEntity<String> projectToProduction(Integer projectId);
+
 }

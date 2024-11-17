@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vedruna.projectmgmt.dto.CreateProjectDTO;
 import com.vedruna.projectmgmt.dto.ProjectDTO;
+import com.vedruna.projectmgmt.exceptions.DeveloperNotFound;
 import com.vedruna.projectmgmt.exceptions.IllegalDateFormatException;
 import com.vedruna.projectmgmt.exceptions.ProjectAlreadyExistsException;
 import com.vedruna.projectmgmt.exceptions.ProjectNotFoundException;
@@ -245,6 +246,137 @@ public class ProjectServiceImpl implements ProjectServiceI {
             throw new IllegalDateFormatException();
         }else{
             return Date.valueOf(date);
+        }
+    }
+
+
+    // SERVICIOS EXTRA 
+
+    /**
+     * Añade un desarrollador a un proyecto existente.
+     * 
+     * Verifica que el proyecto y el desarrollador existan, y si es así, 
+     * los relaciona en la base de datos.
+     * 
+     * @param projectId El ID del proyecto al que se va a anadir el
+     * desarrollador.
+     * @param developerId El ID del desarrollador que se va a anadir.
+     * @return Un mensaje de confirmación de que se ha anadido el
+     *         desarrollador al proyecto.
+     */
+    @Override
+    public ResponseEntity<String> addDeveloperToProject(Integer developerId, Integer projectId) {
+        if(!projectRepo.existsById(projectId)){
+            throw new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + projectId);
+        }
+        if(!devRepo.existsById(developerId)){
+            throw new DeveloperNotFound(developerId);
+        }
+        Project pj = projectRepo.findById(projectId).get();
+        Developer dev = devRepo.findById(developerId).get();
+        try{
+        pj.getDevelopers().add(devRepo.findById(developerId).get());
+        dev.getProjects().add(projectRepo.findById(projectId).get());
+        projectRepo.save(pj);
+        devRepo.save(dev);
+        return ResponseEntity.ok("Se ha anadido el desarrollador con id: " + developerId + " al proyecto con id: " + projectId);   
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.ok("No se ha anadido el desarrollador con id: " + developerId + " al proyecto con id: " + projectId);
+        }
+    }
+
+    /**
+     * Añade una tecnología a un proyecto existente.
+     * 
+     * Verifica que el proyecto y la tecnología existan, y si es así, 
+     * los relaciona en la base de datos.
+     * 
+     * @param projectId El ID del proyecto al que se va a anadir la
+     * tecnología.
+     * @param technologyId El ID de la tecnología que se va a anadir.
+     * @return Un mensaje de confirmación de que se ha anadido la
+     *         tecnología al proyecto.
+     */
+    @Override
+    public ResponseEntity<String> addTechnologyToProject(Integer technologyId, Integer projectId) {
+        if(!projectRepo.existsById(projectId)){
+            throw new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + projectId);
+        }
+        if(!techRepo.existsById(technologyId)){
+            throw new DeveloperNotFound(technologyId);
+        }
+        Project pj = projectRepo.findById(projectId).get();
+        Technology tech = techRepo.findById(technologyId).get();
+        try{
+        pj.getTechnologies().add(techRepo.findById(technologyId).get());
+        tech.getProjects().add(projectRepo.findById(projectId).get());
+        projectRepo.save(pj);
+        techRepo.save(tech);
+        return ResponseEntity.ok("Se ha anadido la tecnología con id: " + technologyId + " al proyecto con id: " + projectId);   
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.ok("No se ha anadido la tecnología con id: " + technologyId + " al proyecto con id: " + projectId);
+        }
+    }
+
+    /**
+     * Cambia el estado de un proyecto a Testing.
+     * 
+     * Verifica que el proyecto exista y que est  en desarrollo, y si es
+     * así, cambia su estado a Testing.
+     * 
+     * @param projectId El ID del proyecto al que se va a cambiar el
+     *                  estado.
+     * @return Un mensaje de confirmaci n de que se ha cambiado el
+     *         estado del proyecto.
+     */
+    @Override
+    public ResponseEntity<String> projectToTest(Integer projectId) {
+        if(!projectRepo.existsById(projectId)){
+            throw new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + projectId);
+        }
+        Project pj = projectRepo.findById(projectId).get();
+        if(pj.getStatus().getStatusId() != 1){
+            throw new ProjectNotFoundException("El proyecto con id: " + projectId + " no se encuentra en development");
+        }
+        try{
+        pj.setStatus(statusRepo.findById(2).get());
+        projectRepo.save(pj);
+        return ResponseEntity.ok("Se ha cambiado el estado del proyecto con id: " + projectId + " a Testing");   
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.ok("No se ha cambiado el estado del proyecto con id: " + projectId + " a Testing");
+        }
+    }
+
+    /**
+     * Cambia el estado de un proyecto a Production.
+     * 
+     * Verifica que el proyecto exista y que est  en Testing, y si es
+     * así, cambia su estado a Production.
+     * 
+     * @param projectId El ID del proyecto al que se va a cambiar el
+     *                  estado.
+     * @return Un mensaje de confirmación de que se ha cambiado el
+     *         estado del proyecto.
+     */
+    @Override
+    public ResponseEntity<String> projectToProduction(Integer projectId) {
+        if(!projectRepo.existsById(projectId)){
+            throw new ProjectNotFoundException("No se ha encontrado el proyecto con id: " + projectId);
+        }
+        Project pj = projectRepo.findById(projectId).get();
+        if(pj.getStatus().getStatusId() != 2){
+            throw new ProjectNotFoundException("El proyecto con id: " + projectId + " no se encuentra en Testing");
+        }
+        try{
+        pj.setStatus(statusRepo.findById(3).get());
+        projectRepo.save(pj);
+        return ResponseEntity.ok("Se ha cambiado el estado del proyecto con id: " + projectId + " a Production");   
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.ok("No se ha cambiado el estado del proyecto con id: " + projectId + " a Production");
         }
     }   
 }
