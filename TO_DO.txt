@@ -29,3 +29,32 @@ check-BUENAS PRÁCTICAS, COMENTARIOS, ERRORES, REFACTOR
 check -RESTCONTROLLERADVICE que capture Excepciones
 check -Anotaciones de validaciones a los atributos así como CUSTO VALIDATION a url
 -GET /api/v1/projects/tec/{tech}
+
+
+
+
+
+JSON INSERTAR proyecto
+{
+    "projectId": 0,
+    "name": "prueba proyectos",
+    "description": "esto es la prueba 3",
+    "startDate": "2024-10-01",
+    "endDate": "2024-11-23",
+    "repoUrl": "https://github.com/proyecto",
+    "demoUrl": "https://demo-proyecto.com",
+    "pictureUrl": "https://proyecto.com/imagen.png",
+    "developersIds": [1],
+    "technologiesIds": [0]
+}
+
+JSON de Insertar developers
+{
+  "devId": 1,
+  "name": "Juan",
+  "surname": "Pérez",
+  "email": "juan.perez@example.com",
+  "linkedinUrl": "https://linkedin.com/in/juan-perez",
+  "githubUrl": "https://github.com/juanperez",
+  "projectsIds": [1,2,4]
+}

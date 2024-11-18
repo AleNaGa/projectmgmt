@@ -25,6 +25,7 @@ import com.vedruna.projectmgmt.services.ProjectServiceI;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -76,6 +77,20 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/bytech/{name}")
+    public ResponseEntity<List<ProjectDTO>> findByTech(@PathVariable String name, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+        try {
+            List<ProjectDTO> projects = projectServ.getByTechno(name, page, size);
+            if (projects.isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+            }
+            return ResponseEntity.ok(projects); // 200 OK con los proyectos
+        } catch (Exception e) {
+            log.error("Error al obtener proyectos: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 500 con lista vacía
+        }
+    }
+
 
     @PostMapping("/insert")
     public ResponseEntity<String> insert(@Valid @RequestBody CreateProjectDTO project, BindingResult bindingResult) {
@@ -116,6 +131,55 @@ public class ProjectController {
         } catch (Exception e) {
             log.error("Error al actualizar proyecto: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el proyecto: " + e.getMessage());
+        }
+    }
+
+
+    //EXTRAS
+
+
+    @PostMapping("/asigntech/{techid}/toproject/{projectid}")
+    public ResponseEntity<String> assignTech(@PathVariable Integer techid, @PathVariable Integer projectid) {
+        try {
+            log.info("Asignando tecnologia con id: {} al proyecto con id: {}", techid, projectid);
+            return projectServ.addTechnologyToProject(techid, projectid);
+        } catch (Exception e) {
+            log.error("Error al asignar tecnologia: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar la tecnologia: " + e.getMessage());
+        }
+    }
+
+    
+    @PostMapping("/asigndev/{devid}/toproject/{projectid}")
+    public ResponseEntity<String> assingDev(@PathVariable Integer devid, @PathVariable Integer projectid) {
+        try {
+            log.info("Asignando developer con id: {} al proyecto con id: {}", devid, projectid);
+            return projectServ.addDeveloperToProject(devid, projectid);
+        } catch (Exception e) {
+            log.error("Error al asignar developer: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar del desarrollador: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/totesting/{id}")
+    public ResponseEntity<String> toTest(@PathVariable Integer id) {
+        try {
+            log.info("Cambiando estado del  proyecto con id: {} a test", id);
+            return projectServ.projectToTest(id);
+        } catch (Exception e) {
+            log.error("Error al asignar proyecto a test: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar el proyecto a test: " + e.getMessage());
+        }
+    }
+
+    @PatchMapping("/toprod/{id}")
+    public ResponseEntity<String> toProduction(@PathVariable Integer id) {
+        try {
+            log.info("Cambiando estado del  proyecto con id: {} a production", id);
+            return projectServ.projectToProduction(id);
+        } catch (Exception e) {
+            log.error("Error al asignar proyecto a production: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al asignar el proyecto a production: " + e.getMessage());
         }
     }
 
