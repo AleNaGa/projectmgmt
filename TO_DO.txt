@@ -1,35 +1,4 @@
-check -MODELO VISTA CONTROLADOR
-check -Entidades
-check-DEFINIR UNICAMENTE MÉTODOS QUE SE VAYAN A USAR EN REPOSITORIOS
-check -DEFINIR LÓGICA SERVICIOS
-check??-PREVENCIÓN DE CRASHEO
-check-RESPONSEENTITY
--ENDPOINTS: 
-    Check-GET /projects
-    check-Get /projects/{word}
-   Check -POST /projects
-    -PUT /projects/{id}
-    check-Delete /projects/{id}
-    check-POST /developers
-    check-DELETE /developers
-    check-POST /technologies
-    check-DELETE /technologies
-
-----------------REST------------------
-check-BUENAS PRÁCTICAS, COMENTARIOS, ERRORES, REFACTOR
--README COMPLETO Y GUÍA
--ENDPOINT (Primer status development)
-    -PATH /api/v1/projects/totesting (a status testing)
-    -PATH /api/v1/projects/toprod (a status production)
--DTO genérico de respuesta a manipulación de datos
--ENDPOINTS: 
-    -POST /api/v1/technologies/used -> tecnología a proyecto
-    -POST /api/v1/developers/worked -> trabajador a proyecto
--SWAGGER con SPRINGDOC decribir api y detallas ENDPOINTS
-check -RESTCONTROLLERADVICE que capture Excepciones
-check -Anotaciones de validaciones a los atributos así como CUSTO VALIDATION a url
--GET /api/v1/projects/tec/{tech}
-
+SWAGGER: http://localhost:8080/swagger-ui.html
 
 
 
@@ -58,3 +27,24 @@ JSON de Insertar developers
   "githubUrl": "https://github.com/juanperez",
   "projectsIds": [1,2,4]
 }
+
+Bibliografías: 
+SpringBoot: 
+    https://spring.io/projects/spring-boot#overview
+JPA: 
+    https://docs.spring.io/spring-data/jpa/reference/jpa.html
+Swagger: 
+    https://springdoc.org
+Validación con @Valid y BindingResult
+    https://docs.spring.io/spring-framework/reference/core/validation/beans-beans.html
+    https://hibernate.org/validator/
+MVC:
+    https://docs.spring.io/spring-framework/reference/web/webmvc.html
+Hibernate: 
+    https://spring.io/guides/gs/accessing-data-jpa
+Tutoriales: 
+    https://www.youtube.com/watch?v=iBGkJln9BPo&list=PLcs1FElCmEu121gqGwlQt47d0SqNkzSTK
+    https://www.youtube.com/watch?v=H8QmmbFs8tk
+Excepciones:
+    https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/ResponseStatus.html
+
