@@ -1,5 +1,6 @@
 package com.vedruna.projectmgmt.controllers;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -11,15 +12,20 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vedruna.projectmgmt.dto.CreateTechnologyDTO;
 import com.vedruna.projectmgmt.dto.ResponseDTO;
 import com.vedruna.projectmgmt.dto.SampleDTO;
+import com.vedruna.projectmgmt.dto.TechnologyDTO;
 import com.vedruna.projectmgmt.services.TechnologyServiceI;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -59,6 +65,27 @@ public class TechnologyController {
     public String test(@RequestBody SampleDTO test) {
         log.info("Test: {}", test.getSaludo());
         return test.getSaludo();
+    }
+
+    @Operation(
+    summary = "Obtener todas las tecnologías",
+    description = "Este endpoint obtiene una lista de todas las tecnologías disponibles."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Tecnologías obtenidas exitosamente.", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TechnologyDTO.class)))),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor al obtener las tecnologías.")
+    })
+    @GetMapping
+    public ResponseEntity<List<TechnologyDTO>> getAll() {
+        try{
+            log.info("Obteniendo todas las tecnologias");
+            List<TechnologyDTO> technologies = technologyServ.getAllTechnologies();
+            return ResponseEntity.ok(technologies);
+        }
+        catch(Exception e){
+            log.error("Error al obtener las tecnologias: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.vedruna.projectmgmt.controllers;
 import com.vedruna.projectmgmt.dto.CreateProjectDTO;
+import com.vedruna.projectmgmt.dto.PaginatedResponseDTO;
 import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.dto.ResponseDTO;
 import com.vedruna.projectmgmt.dto.SampleDTO;
@@ -65,75 +66,103 @@ public class ProjectController {
 
     //METODOS DE FIND CON GET-------------------------------------------
     @Operation(
-    summary = "Obtener todos los proyectos",
-    description = "Este endpoint obtiene todos los proyectos con paginación. Si no hay proyectos, devuelve un código 204 No Content.",
-    responses = {
-        @ApiResponse(responseCode = "200", description = "Proyectos obtenidos exitosamente."),
-        @ApiResponse(responseCode = "204", description = "No se encontraron proyectos."),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor.")
-    }
-    )
-    @GetMapping
-    public ResponseEntity<List<ProjectDTO>> findAll(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
-        try {
-            List<ProjectDTO> projects = projectServ.getAll(page, size);
-            if (projects.isEmpty()) {
-                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
-            }
-            return ResponseEntity.ok(projects); // 200 OK con los proyectos
-        } catch (Exception e) {
-            log.error("Error al obtener proyectos: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 500 con lista vacía
-        }
-    }
-
-
-    @Operation(
-    summary = "Buscar proyectos por palabra clave",
-    description = "Este endpoint permite buscar proyectos que contengan una palabra clave específica en su nombre o descripción. También admite paginación.",
-    responses = {
-        @ApiResponse(responseCode = "200", description = "Proyectos encontrados exitosamente."),
-        @ApiResponse(responseCode = "204", description = "No se encontraron proyectos que coincidan con la palabra clave."),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor.")
-    }
-    )
-    @GetMapping("/byword/{word}")
-    public ResponseEntity<List<ProjectDTO>> findByWord(@PathVariable String word, @RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
-        try {
-            List<ProjectDTO> projects = projectServ.getProjectByWord(word, page, size);
-            if (projects.isEmpty()) {
-                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
-            }
-            return ResponseEntity.ok(projects); // 200 OK con los proyectos
-        } catch (Exception e) {
-            log.error("Error al obtener proyectos: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 500 con lista vacía
-        }
-    }
-
-
-    @Operation(
-        summary = "Buscar proyectos por tecnología",
-        description = "Este endpoint permite buscar proyectos que usan una tecnología específica, soportando paginación.",
+        summary = "Obtener todos los proyectos",
+        description = "Este endpoint obtiene todos los proyectos con paginación. Si no hay proyectos, devuelve un código 204 No Content.",
         responses = {
-            @ApiResponse(responseCode = "200", description = "Proyectos encontrados exitosamente."),
-            @ApiResponse(responseCode = "204", description = "No se encontraron proyectos asociados a la tecnología."),
+            @ApiResponse(responseCode = "200", description = "Proyectos obtenidos exitosamente."),
+            @ApiResponse(responseCode = "204", description = "No se encontraron proyectos."),
             @ApiResponse(responseCode = "500", description = "Error interno del servidor.")
         }
     )
-    @GetMapping("/bytech/{name}")
-    public ResponseEntity<List<ProjectDTO>> findByTech(@PathVariable String name,@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
+    @GetMapping
+    public ResponseEntity<PaginatedResponseDTO<ProjectDTO>> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         try {
-            List<ProjectDTO> projects = projectServ.getByTechno(name, page, size);
-            if (projects.isEmpty()) {
+            // Obtener la respuesta paginada del servicio
+            PaginatedResponseDTO<ProjectDTO> paginatedProjects = projectServ.getAll(page, size);
+    
+            // Verificar si hay contenido
+            if (paginatedProjects.getContent().isEmpty()) {
                 return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
             }
-            return ResponseEntity.ok(projects); // 200 OK con los proyectos
+    
+            // Retornar la respuesta con los proyectos paginados
+            return ResponseEntity.ok(paginatedProjects); // 200 OK con los proyectos y la paginación
         } catch (Exception e) {
             log.error("Error al obtener proyectos: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList()); // 500 con lista vacía
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error
         }
     }
+    
+
+
+
+
+    @Operation(
+        summary = "Buscar proyectos por palabra clave",
+        description = "Este endpoint permite buscar proyectos que contengan una palabra clave específica en su nombre o descripción. También admite paginación.",
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Proyectos encontrados exitosamente."),
+            @ApiResponse(responseCode = "204", description = "No se encontraron proyectos que coincidan con la palabra clave."),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor.")
+        }
+    )
+    @GetMapping("/byword/{word}")
+    public ResponseEntity<PaginatedResponseDTO<ProjectDTO>> findByWord(
+            @PathVariable String word,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            // Obtener la respuesta paginada del servicio
+            PaginatedResponseDTO<ProjectDTO> paginatedProjects = projectServ.getProjectByWord(word, page, size);
+    
+            // Verificar si hay contenido
+            if (paginatedProjects.getContent().isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+            }
+    
+            // Retornar la respuesta con los proyectos paginados
+            return ResponseEntity.ok(paginatedProjects); // 200 OK con los proyectos y la paginación
+        } catch (Exception e) {
+            log.error("Error al obtener proyectos: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error
+        }
+    }
+    
+
+
+    @Operation(
+    summary = "Buscar proyectos por tecnología",
+    description = "Este endpoint permite buscar proyectos que usan una tecnología específica, soportando paginación.",
+    responses = {
+        @ApiResponse(responseCode = "200", description = "Proyectos encontrados exitosamente."),
+        @ApiResponse(responseCode = "204", description = "No se encontraron proyectos asociados a la tecnología."),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor.")
+    }
+    )
+    @GetMapping("/bytech/{name}")
+    public ResponseEntity<PaginatedResponseDTO<ProjectDTO>> findByTech(
+            @PathVariable String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        try {
+            // Obtener la respuesta paginada del servicio
+            PaginatedResponseDTO<ProjectDTO> paginatedProjects = projectServ.getByTechno(name, page, size);
+
+            // Verificar si hay contenido
+            if (paginatedProjects.getContent().isEmpty()) {
+                return ResponseEntity.noContent().build(); // 204 No Content si no hay proyectos
+            }
+
+            // Retornar la respuesta con los proyectos paginados
+            return ResponseEntity.ok(paginatedProjects); // 200 OK con los proyectos y la paginación
+        } catch (Exception e) {
+            log.error("Error al obtener proyectos: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error
+        }
+    }
+
     
 
     //METODOS DE MODIFICACIÓN
