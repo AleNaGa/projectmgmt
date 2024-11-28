@@ -1,5 +1,6 @@
 package com.vedruna.projectmgmt.controllers;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -12,10 +13,15 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.vedruna.projectmgmt.dto.CreateDeveloperDTO;
+import com.vedruna.projectmgmt.dto.DeveloperDTO;
+import com.vedruna.projectmgmt.dto.PaginatedResponseDTO;
+import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.dto.ResponseDTO;
 import com.vedruna.projectmgmt.dto.SampleDTO;
 
@@ -60,6 +66,35 @@ public class DeveloperController {
         log.info("Test: {}", test.getSaludo());
         return test.getSaludo();
     }
+    //Get All Developers
+    @Operation(
+    summary = "Obtiene todos los desarrolladores",
+    description = "Este endpoint devuelve una lista de todos los desarrolladores existentes en la base de datos."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de desarrolladores obtenida correctamente."),
+        @ApiResponse(responseCode = "404", description = "No se encontraron desarrolladores en la base de datos.")
+    })
+    @GetMapping 
+    public ResponseEntity<PaginatedResponseDTO<DeveloperDTO>> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        try {
+            // Obtener la respuesta paginada del servicio
+            PaginatedResponseDTO<DeveloperDTO> paginatedDevelopers = developerServ.getAll(page, size);
+    
+            // Verificar si hay contenido
+            if (paginatedDevelopers.getContent().isEmpty()) {
+                return ResponseEntity.notFound().build(); // 404 Not Found si no hay desarrolladores
+            }
+    
+            // Retornar la respuesta con los desarrolladores paginados
+            return ResponseEntity.ok(paginatedDevelopers); // 200 OK con los desarrolladores y la paginación
+        } catch (Exception e) {
+            log.error("Error al obtener desarrolladores: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 500 Internal Server Error
+        }
+    }
+       
+
 
 
 

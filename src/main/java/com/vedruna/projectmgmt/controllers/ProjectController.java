@@ -75,9 +75,7 @@ public class ProjectController {
         }
     )
     @GetMapping
-    public ResponseEntity<PaginatedResponseDTO<ProjectDTO>> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PaginatedResponseDTO<ProjectDTO>> findAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         try {
             // Obtener la respuesta paginada del servicio
             PaginatedResponseDTO<ProjectDTO> paginatedProjects = projectServ.getAll(page, size);
