@@ -1,0 +1,50 @@
+SWAGGER: http://localhost:8080/swagger-ui.html
+
+
+
+
+JSON INSERTAR proyecto
+{
+    "projectId": 0,
+    "name": "prueba proyectos",
+    "description": "esto es la prueba 3",
+    "startDate": "2024-10-01",
+    "endDate": "2024-11-23",
+    "repoUrl": "https://github.com/proyecto",
+    "demoUrl": "https://demo-proyecto.com",
+    "pictureUrl": "https://proyecto.com/imagen.png",
+    "developersIds": [1],
+    "technologiesIds": [0]
+}
+
+JSON de Insertar developers
+{
+  "devId": 1,
+  "name": "Juan",
+  "surname": "Pérez",
+  "email": "juan.perez@example.com",
+  "linkedinUrl": "https://linkedin.com/in/juan-perez",
+  "githubUrl": "https://github.com/juanperez",
+  "projectsIds": [1,2,4]
+}
+
+Bibliografías: 
+SpringBoot: 
+    https://spring.io/projects/spring-boot#overview
+JPA: 
+    https://docs.spring.io/spring-data/jpa/reference/jpa.html
+Swagger: 
+    https://springdoc.org
+Validación con @Valid y BindingResult
+    https://docs.spring.io/spring-framework/reference/core/validation/beans-beans.html
+    https://hibernate.org/validator/
+MVC:
+    https://docs.spring.io/spring-framework/reference/web/webmvc.html
+Hibernate: 
+    https://spring.io/guides/gs/accessing-data-jpa
+Tutoriales: 
+    https://www.youtube.com/watch?v=iBGkJln9BPo&list=PLcs1FElCmEu121gqGwlQt47d0SqNkzSTK
+    https://www.youtube.com/watch?v=H8QmmbFs8tk
+Excepciones:
+    https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/bind/annotation/ResponseStatus.html
+
