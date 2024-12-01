@@ -3,6 +3,7 @@ package com.vedruna.projectmgmt.services;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.vedruna.projectmgmt.dto.CreateTechnologyDTO;
+import com.vedruna.projectmgmt.dto.TechnologyDTO;
 import com.vedruna.projectmgmt.exceptions.ProjectNotFoundException;
 import com.vedruna.projectmgmt.exceptions.TechnologyAlreadyExists;
 import com.vedruna.projectmgmt.exceptions.TechnologyNotFound;
@@ -89,6 +91,16 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
     }
 
 
+    /**
+     * Convierte una lista de IDs de proyectos en una lista de objetos Project.
+     *
+     * Verifica que cada ID de proyecto exista en la base de datos. Si un ID no
+     * existe, lanza una excepción ProjectNotFoundException. Si el ID es válido, 
+     * busca el proyecto correspondiente y lo agrega a la lista.
+     *
+     * @param projectsIds Una lista de IDs de proyectos a convertir.
+     * @return Una lista de objetos Project correspondientes a los IDs proporcionados.
+     */
     private List<Project> techProjects(List<Integer> projectsIds) {
         List<Project> tech = new ArrayList<>();
         for (Integer id : projectsIds) {
@@ -100,6 +112,26 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
             tech.add(pj);
         }
         return tech;
+    }
+
+    /**
+     * Obtener todas las tecnologías.
+     *
+     * Devuelve una lista de DTO de tecnologías. Si no hay tecnologías, lanza una
+     * excepción personalizada.
+     *
+     * @return Una lista de tecnologías en formato DTO.
+     */
+    @Override
+    public List<TechnologyDTO> getAllTechnologies() {
+        try{
+            log.info("Se han obtenido todas las tecnologías");
+        List<Technology> technologies = technologyRepo.findAll();
+        return technologies.stream().map(TechnologyDTO::new).collect(Collectors.toList());
+        }catch(Exception e){
+            log.error("No se han obtenido todas las tecnologías");
+            throw new TechnologyNotFound(0);
+        }
     }
     
 }

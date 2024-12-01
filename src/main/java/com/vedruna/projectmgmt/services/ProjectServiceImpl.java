@@ -1,8 +1,8 @@
 package com.vedruna.projectmgmt.services;
 
-import java.util.Collections;
+
 import java.sql.Date;
-import java.util.List;
+
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 
 import com.vedruna.projectmgmt.dto.CreateProjectDTO;
+import com.vedruna.projectmgmt.dto.PaginatedResponseDTO;
 import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.exceptions.DeveloperNotFound;
 import com.vedruna.projectmgmt.exceptions.IllegalDateFormatException;
@@ -50,42 +51,54 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
     /**
-     * Obtener todos los proyectos paginados.
+     * Obtiene una lista de proyectos paginada.
      *
-     * @param page  La página que se quiere obtener.
-     * @param size  El número de elementos por página.
-     * @return Una lista de proyectos en formato DTO.
+     * @param page   número de página a obtener
+     * @param size   tamaño de la página
+     * @return       un DTO de respuesta paginada con los proyectos
      */
     @Override
-    public List<ProjectDTO> getAll(int page, int size) {
-        Pageable pages = PageRequest.of(page, size);
-
-        Page<Project> projectPage = projectRepo.findAll(pages);
-            log.info("Se han obtenido {} proyectos", projectPage.getTotalElements());
-            return projectPage.getContent().stream().map(ProjectDTO::new).collect(Collectors.toList());
-
+    public PaginatedResponseDTO<ProjectDTO> getAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+    
+        // Obtener la página de proyectos
+        Page<Project> projectPage = projectRepo.findAll(pageable);
+        log.info("Se han obtenido {} proyectos", projectPage.getTotalElements());
+    
+        // Construir y devolver la respuesta paginada
+        return new PaginatedResponseDTO<>(projectPage.map(ProjectDTO::new));
     }
+    
+
 
 
     /**
-     * Obtener los proyectos que contengan la palabra pasada como parámetro en
-     * su nombre.
+     * Obtiene una lista paginada de proyectos que contengan la palabra clave en su nombre
      *
-     * @param word La palabra a buscar en el nombre de los proyectos.
-     * @param page La página que se quiere obtener.
-     * @param size El número de elementos por página.
-     * @return Una lista de proyectos en formato DTO que contienen la palabra
-     *         pasada como parámetro en su nombre.
+     * @param word   palabra clave para buscar proyectos
+     * @param page   número de página a obtener
+     * @param size   tamaño de la página
+     * @return       un DTO de respuesta paginada con los proyectos
      */
     @Override
-    public List<ProjectDTO> getProjectByWord(String word, int page, int size) {
+    public PaginatedResponseDTO<ProjectDTO> getProjectByWord(String word, int page, int size) {
         Pageable pages = PageRequest.of(page, size);
-        //Método concreto para encontrar que contenga la palabra y devuelva pageable con las respuestas.
+        // Método para buscar proyectos que contengan la palabra clave en su nombre
         Page<Project> projectPage = projectRepo.findByProjectNameContainingIgnoreCase(word, pages);
-    
+
         log.info("Se han obtenido {} proyectos", projectPage.getTotalElements());
-        return projectPage.getContent().stream().map(ProjectDTO::new).collect(Collectors.toList());
+
+        // Crear el PaginatedResponseDTO con los resultados y la información de paginación
+        PaginatedResponseDTO<ProjectDTO> response = new PaginatedResponseDTO<>();
+        response.setContent(projectPage.getContent().stream().map(ProjectDTO::new).collect(Collectors.toList()));
+        response.setCurrentPage(page);
+        response.setTotalPages(projectPage.getTotalPages());
+        response.setTotalItems((int) projectPage.getTotalElements());
+        response.setPageSize(size);
+
+        return response;
     }
+
 
     /**
      * Insertar proyecto.
@@ -215,18 +228,26 @@ public class ProjectServiceImpl implements ProjectServiceI {
      * @return Una lista de proyectos en formato DTO.
      */
     @Override
-    public List<ProjectDTO> getByTechno(String tech, int page, int size) {
+    public PaginatedResponseDTO<ProjectDTO> getByTechno(String tech, int page, int size) {
         Pageable pages = PageRequest.of(page, size);
-        Page<Project> project = projectRepo.findProjectsByTechnologyName(tech, pages);
-        try{
-            log.info("Se han obtenido {} proyectos", project.getSize());
-            return project.stream().map(ProjectDTO::new).collect(Collectors.toList());
-        }catch(Exception e){
-            log.error(e.getMessage());
-            return Collections.emptyList();
-        }
-       
+        // Buscar proyectos por tecnología
+        Page<Project> projectPage = projectRepo.findProjectsByTechnologyName(tech, pages);
+
+        log.info("Se han obtenido {} proyectos", projectPage.getTotalElements());
+
+        // Crear el PaginatedResponseDTO con los resultados y la información de paginación
+        PaginatedResponseDTO<ProjectDTO> response = new PaginatedResponseDTO<>();
+        response.setContent(projectPage.getContent().stream()
+                                    .map(ProjectDTO::new)
+                                    .collect(Collectors.toList()));
+        response.setCurrentPage(page);
+        response.setTotalPages(projectPage.getTotalPages());
+        response.setTotalItems((int) projectPage.getTotalElements());
+        response.setPageSize(size);
+
+        return response;
     }
+
 
 
     /**
