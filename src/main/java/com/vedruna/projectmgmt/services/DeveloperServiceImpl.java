@@ -29,6 +29,8 @@ import com.vedruna.projectmgmt.persistance.repository.ProjectRepositoryI;
 @Service
 public class DeveloperServiceImpl implements DeveloperServiceI {
 
+    
+
     @Autowired
     private static final Logger log = LoggerFactory.getLogger(DeveloperServiceImpl.class);
     @Autowired
