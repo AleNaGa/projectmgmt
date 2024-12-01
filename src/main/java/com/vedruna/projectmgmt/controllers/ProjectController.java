@@ -5,8 +5,6 @@ import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.dto.ResponseDTO;
 import com.vedruna.projectmgmt.dto.SampleDTO;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -42,11 +40,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/projects")
 public class ProjectController {
 
+    // Resupesta genérica
     private final ResponseDTO<String> responseDTO = new ResponseDTO<>();//crea el DTOResponse para limpiar el código
 
+    //Logger de depuración
     @Autowired
     private static final Logger log = LoggerFactory.getLogger(ProjectController.class);
 
+    //Servicios
     @Autowired
     private ProjectServiceI projectServ;
 
@@ -65,6 +66,8 @@ public class ProjectController {
     }
 
     //METODOS DE FIND CON GET-------------------------------------------
+
+    //get all
     @Operation(
         summary = "Obtener todos los proyectos",
         description = "Este endpoint obtiene todos los proyectos con paginación. Si no hay proyectos, devuelve un código 204 No Content.",
@@ -96,7 +99,7 @@ public class ProjectController {
 
 
 
-
+    //Find by word
     @Operation(
         summary = "Buscar proyectos por palabra clave",
         description = "Este endpoint permite buscar proyectos que contengan una palabra clave específica en su nombre o descripción. También admite paginación.",
@@ -130,6 +133,7 @@ public class ProjectController {
     
 
 
+    //Get by tech
     @Operation(
     summary = "Buscar proyectos por tecnología",
     description = "Este endpoint permite buscar proyectos que usan una tecnología específica, soportando paginación.",
@@ -208,6 +212,7 @@ public class ProjectController {
 
 
 
+    //METODO DE ELIMINACIÓN
     @Operation(
     summary = "Eliminar un proyecto",
     description = "Este endpoint permite eliminar un proyecto mediante su ID. El ID debe ser proporcionado en la ruta.",
@@ -237,6 +242,7 @@ public class ProjectController {
 
     
 
+    //METODO DE ACTUALIZACIÓN
     @Operation(
     summary = "Actualizar un proyecto",
     description = "Este endpoint permite actualizar los datos de un proyecto existente utilizando su ID. El ID del proyecto debe ser proporcionado en la ruta y los nuevos datos en el cuerpo de la solicitud.",

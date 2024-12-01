@@ -11,6 +11,5 @@ import jakarta.validation.Constraint;
 @Retention(RetentionPolicy.RUNTIME) // para que funcione mientras corre. Así puede validar la URL que le metamos
 @Constraint(validatedBy = UrlValidator.class)
 public @interface ValidUrl {
-    String message() default "URL inválida"; //la validación de la URL falla, 
-    
+    String message() default "URL inválida"; //la validación de la URL falla por defecto
 }
