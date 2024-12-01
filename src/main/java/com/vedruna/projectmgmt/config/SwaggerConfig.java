@@ -10,8 +10,10 @@ import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
+//Configuración de Swagger para la versión 1 de la API
 @Configuration
 @OpenAPIDefinition(
+    //Información del API REST
     info = @Info(
         title = "Project Management API",      
         description = "API para gestionar proyectos de software para un portfolio",  
@@ -27,6 +29,7 @@ import io.swagger.v3.oas.annotations.info.License;
         )
     )
 )
+//Configuración de la ruta de la versión 1
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi v1Api() {

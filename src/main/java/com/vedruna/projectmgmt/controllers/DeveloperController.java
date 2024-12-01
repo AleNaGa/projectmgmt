@@ -1,6 +1,5 @@
 package com.vedruna.projectmgmt.controllers;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vedruna.projectmgmt.dto.CreateDeveloperDTO;
 import com.vedruna.projectmgmt.dto.DeveloperDTO;
 import com.vedruna.projectmgmt.dto.PaginatedResponseDTO;
-import com.vedruna.projectmgmt.dto.ProjectDTO;
 import com.vedruna.projectmgmt.dto.ResponseDTO;
 import com.vedruna.projectmgmt.dto.SampleDTO;
 
@@ -37,17 +35,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-
+/**
+ * DeveloperController
+ * Controlador de la entidad Developer de la API
+ * Realiza operaciones CRUD sobre la entidad
+ */
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/developers")
 public class DeveloperController {
 
+    //DTO de respuesta genérica
     private final ResponseDTO<String> responseDTO = new ResponseDTO<>();
 
+    //Servicio de desarrollador
     @Autowired
     private DeveloperServiceI developerServ;
 
+    //Logger para depuración
     @Autowired
     private static final Logger log = LoggerFactory.getLogger(DeveloperController.class);
 
@@ -66,6 +71,8 @@ public class DeveloperController {
         log.info("Test: {}", test.getSaludo());
         return test.getSaludo();
     }
+
+
     //Get All Developers
     @Operation(
     summary = "Obtiene todos los desarrolladores",
@@ -163,7 +170,7 @@ public class DeveloperController {
             // servicio para eliminar el desarrollador
             ResponseEntity<String> response = developerServ.deleteDeveloper(id);
 
-            //  ResponseDTO de éxito;
+            //ResponseDTO de éxito
             responseDTO.setMessage("Desarrollador eliminado correctamente.");
             responseDTO.setData(response.getBody());
 

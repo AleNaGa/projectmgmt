@@ -1,7 +1,5 @@
 package com.vedruna.projectmgmt.services;
 
-import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 
 import com.vedruna.projectmgmt.dto.CreateProjectDTO;
